@@ -19,13 +19,24 @@ const section2OutputDiv = document.getElementById("section-2-output");
   Observe the order of execution.
 */
 
-let placeholder = `Delete
-                   Me
-                   And
-                   Code
-                   Here
-`;
+ function syncFunction() {
+    console.log("Synchronous Function Start");
+    console.log(1);
+    console.log(2);
+    console.log(3);
+    console.log("Synchronous Function End");
+  }
 
+  function asyncFunction() {
+    console.log("Asynchronous Function Start");
+    setTimeout(() => console.log(1), 0);
+    setTimeout(() => console.log(2), 0);
+    setTimeout(() => console.log(3), 0);
+    console.log("Asynchronous Function End");
+}
+
+syncFunction();
+asyncFunction();
 /*
   Exercise 2: Callback Function Example
 
@@ -39,13 +50,20 @@ let placeholder = `Delete
   Display the returned data in the #section-2-output div when the 
   #exercise-2-btn is clicked.
 */
+const exercise2btn = document.querySelector("#exercise-2-btn");
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+function getDataCallback(callback) {
+  setTimeout(() => {
+     const data = { id: 1, name: "John Doe" };
+    callback(data);
+  }, 1000);
+};
+
+exercise2btn.addEventListener("click", () => {
+  getDataCallback((data) => {
+    section2OutputDiv.textContent = JSON.stringify(data, null, 2);
+  });
+});
 
 /*
   Exercise 3: The Callback Pyramid of Doom
@@ -58,12 +76,36 @@ placeholder = `Delete
   Discuss how this leads to the "Callback Pyramid of Doom".
 */
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+ function operation1(callback) {
+    setTimeout(() => {
+      console.log("Operation 1 Complete");
+      callback();
+    }, 1000);
+  }
+
+  function operation2(callback) {
+    setTimeout(() => {
+      console.log("Operation 2 Complete");
+      callback();
+    }, 1000);
+  }
+
+  function operation3(callback) {
+    setTimeout(() => {
+      console.log("Operation 3 Complete");
+      callback();
+    }, 1000);
+  }
+
+  function startOperations() {
+    operation1(() => {
+      operation2(() => {
+        operation3(() => {
+          console.log("All Operations Complete");
+        });
+      });
+    });
+  }
 
 /*
   Exercise 4: Creating a Promise
@@ -81,13 +123,26 @@ placeholder = `Delete
 
 // Exercise 4 - Solution
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+const exercise4btn = document.getElementById("exercise-4-btn");
 
+function getDataPromise() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const data = { id: 1, name: "John Doe" };
+      resolve(data);
+    }, 1000);
+  });
+};
+
+exercise4btn.addEventListener("click", () => {
+  getDataPromise()
+    .then((data) => {
+      section2OutputDiv.textContent = `Promise Data: ${JSON.stringify(data)}`;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+});
 /*
   Exercise 5: Promise States
 
@@ -102,13 +157,21 @@ placeholder = `Delete
   demonstrate the rejected state.
 */
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+function rejectedPromise() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject("Promise Rejected!");
+    }, 1000);
+  });
+};
 
+rejectedPromise()
+.then((data) => {
+  console.log("Data:", data);
+})
+.catch((error)=> {
+  console.error("ERROR:", error);
+})
 /*
   Exercise 6: Consuming Promises with then, catch, and finally
 
@@ -121,12 +184,16 @@ placeholder = `Delete
   - getDataPromise().then().catch().finally()
 */
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+getDataPromise()
+    .then((data) => {
+      section2OutputDiv.textContent = `Promise Data: ${JSON.stringify(data)}`;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    })
+    .finally(()=> {
+      console.log("Operation completed")
+    })
 
 /*
   Exercise 7: Chaining Promises
@@ -140,13 +207,27 @@ placeholder = `Delete
   Display the returned data in the #section-2-output div when the 
   #exercise-7-btn is clicked.
 */
+const exercise7btn = document.querySelector("#exercise-7-btn");
+function processData(data){
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      data.processed = true;
+      resolve(data);
+    },1000);
+  });
+  };
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+  exercise7btn.addEventListener("click", () => {
+    getDataPromise()
+    .then((data) => processData(data))
+    .then((processedData) => {
+      section2OutputDiv.textContent = JSON.stringify(processedData, null, 2);
+    })
+    .catch((error) => {
+      console.error("ERROR:", error);
+    });
+  });
+
 
 /*
   Exercise 8: Handling Errors in Promise Chains
@@ -161,12 +242,29 @@ placeholder = `Delete
   #exercise-8-btn is clicked.
 */
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+const exercise8btn = document.getElementById("exercise-8-btn");
+function processDataExercise8(data) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      // Simulate an error
+      reject("Error processing data");
+    }, 1000);
+  });
+}
+
+exercise8btn.addEventListener("click", () => {
+  getDataPromise()
+    .then((data) => processDataExercise8(data))
+    .then((processedData) => {
+      section2OutputDiv.textContent = `Processed Data: ${JSON.stringify(
+        processedData
+      )}`;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      section2OutputDiv.textContent = `Error: ${error}`;
+    });
+});
 
 /*
   Exercise 9: Using async and await
@@ -181,12 +279,22 @@ placeholder = `Delete
   #exercise-9-btn is clicked.
 */
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+const exercise9btn = document.getElementById("exercise-9-btn");
+
+exercise9btn.addEventListener("click", async () => {
+  try {
+    const data = await getDataPromise();
+    const processedData = await processData(data);
+    section2OutputDiv.textContent = `Processed Data: ${JSON.stringify(
+      processedData
+    )}`;
+  } catch (error) {
+    console.error("Error:", error);
+    section2OutputDiv.textContent = `Error: ${error}`;
+  } finally {
+    console.log("Async/Await operation completed");
+  }
+});
 
 /*
   Exercise 10: Sequential API Requests with async/await
@@ -200,12 +308,19 @@ placeholder = `Delete
   Display both posts in the #section-1-output div.
 */
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+const exercise10btn = document.querySelector("#exercise-10-btn");
+
+exercise10btn.addEventListener("click", async () => {
+  try{
+  const response1 = await fetch('https://jsonplaceholder.typicode.com/posts/5');
+  const post1 = response1.json();
+  const response2 = await fetch('https://jsonplaceholder.typicode.com/posts/6');
+  const post2 = response2.json();
+  section1OutputDiv.textContent = JSON.stringify({post1, post2}, null, 2);
+  } catch (error) {
+    console.error("ERROR:", error);
+  }
+  });
 
 /*
   Exercise 11: Parallel API Requests with Promise.all
@@ -218,12 +333,18 @@ placeholder = `Delete
   display the results.
 */
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+const exercise11btn = document.querySelector("#exercise-11-btn");
+exercise11btn.addEventListener("click", async () => {
+  try {
+    const [post1, post2] = await Promise.all([
+      fetch(`https://jsonplaceholder.typicode.com/posts/10`).then((res) => res.json()),
+      fetch(`https://jsonplaceholder.typicode.com/posts/15`).then((res) => res.json())
+    ])
+    section1OutputDiv.textContent = JSON.stringify({post1, post2}, null, 2);
+  } catch (error){
+    console.error("ERROR:", error);
+  }
+})
 
 /*
   Exercise 12: Using Promise.race
@@ -238,12 +359,18 @@ placeholder = `Delete
   when the #exercise-12-btn is clicked.
 */
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+const exercise12btn = document.querySelector("#exercise-12-btn");
+exercise12btn.addEventListener("click", async () => {
+  try {
+    const fastestResponse = await Promise.race([
+      fetch(`https://jsonplaceholder.typicode.com/posts/16`).then((res) => res.json()),
+      fetch(`https://jsonplaceholder.typicode.com/posts/20`).then((res) => res.json())
+    ])
+    section1OutputDiv.textContent = JSON.stringify(fastestResponse, null, 2);
+  } catch (error) {
+    console.error("ERROR:", error);
+  }
+});
 
 /*
   Exercise 13: Using Promise.allSettled
@@ -260,12 +387,20 @@ placeholder = `Delete
   in #section-1-output.
 */
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+const exercise13btn = document.querySelector("#exercise-13-btn");
+exercise13btn.addEventListener("click", async () => {
+  const urls = [
+    "https://jsonplaceholder.typicode.com/posts/23",
+    "https://jsonplaceholder.typicode.com/invalid-url",
+    "https://jsonplaceholder.typicode.com/posts/25",
+  ];
+
+  const promises = urls.map((url) => fetch(url).then((res) => res.json()));
+
+  const results = await Promise.allSettled(promises);
+
+  section1OutputDiv.textContent = JSON.stringify(results, null, 2);
+});
 
 /*
   Exercise 14: Using Promise.any
@@ -281,12 +416,23 @@ placeholder = `Delete
     - "https://jsonplaceholder.typicode.com/posts/2"
 */
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+const exercise14btn = document.querySelector("#exercise-14-btn");
+exercise14btn.addEventListener("click", async () => {
+  try {
+  const urls = [
+    "https://jsonplaceholder.typicode.com/invalid-url1",
+    "https://jsonplaceholder.typicode.com/invalid-url2",
+    "https://jsonplaceholder.typicode.com/posts/2"
+  ]
+  const promises = urls.map((url) => fetch(url).then((res)=> res.json()));
+  const results = await Promise.any(promises);
+  section1OutputDiv.textContent = `First success: ${JSON.stringify(results, null, 2)}`;
+} catch (error) {
+  console.error("ERROR:", error);
+}
+});
+
+
 
 /*
   Exercise 15: Handling Rejected Promises Globally
@@ -299,12 +445,13 @@ placeholder = `Delete
   Test it by creating a rejected promise without a catch block.
 */
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+window.addEventListener("unhandledrejection", (event) => {
+    console.error("Unhandled Rejection:", event.reason);
+  });
+
+  const rejectedPromise2 = new Promise((resolve, reject) => {
+    reject("Promise was rejected without a catch");
+  });
 
 /*
   Exercise 16: Combining Promises and Async/Await
@@ -318,12 +465,18 @@ placeholder = `Delete
   an async function using await.
 */
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+async function fetchDataAndProcess() {
+try {
+  const response = await fetch(`https://jsonplaceholder.typicode.com/posts/10`);
+  const data = await response.json();
+const processedData = await processData(data);
+ section1OutputDiv.textContent = `Processed Data: ${JSON.stringify(
+        processedData
+      )}`;
+    } catch (error) {
+      console.error("Error:", error);
+    }
+};
 
 /*
   Exercise 17: Using Promise.resolve and Promise.reject
@@ -335,12 +488,29 @@ placeholder = `Delete
   Use them to test promise handling without asynchronous operations.
 */
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+ function immediateResolve() {
+    return Promise.resolve("Immediate Resolve");
+  }
+
+  function immediateReject() {
+    return Promise.reject("Immediate Reject");
+  }
+
+  immediateResolve()
+    .then((data) => {
+      console.log("Resolved:", data);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+
+  immediateReject()
+    .then((data) => {
+      console.log("Resolved:", data);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 
 /*
   Exercise 18: Implementing a Simple Promise-based Timeout
@@ -353,12 +523,9 @@ placeholder = `Delete
   Use it to delay actions in your code.
 */
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+function delay(ms) {
+return new Promise((resolve) => setTimeout(resolve, ms))
+}
 
 /*
   Exercise 19: Sequential Execution with for Loop and await
@@ -371,12 +538,17 @@ placeholder = `Delete
   Display each post inside #section-1-output as it is fetched.
 */
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+async function fetchPostsSequentially(){
+  for (let i=1; i<=3; i++){
+    try{
+      const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${i}`);
+      const post = await response.json();
+      section1OutputDiv.innerHTML += `<p>Post ${i}: ${post.title}</p>`;
+      } catch (error) {
+        console.error(`Error fetching post ${i}:`, error);
+      }
+    }
+  }
 
 /*
   Exercise 20: Converting Callback-based Functions to Promises
@@ -398,12 +570,17 @@ function readFileCallback(filename, callback) {
   }, 1000);
 }
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+function readFilePromise(filename){
+  return new Promise((resolve, reject) => {
+    readFileCallback(filename, (error, data) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+}
 
 /*
   Exercise 21: Handling Multiple Async Operations with Different Timing
@@ -415,9 +592,23 @@ placeholder = `Delete
   Use Promise.all to wait for all to complete and display the results.
 */
 
-placeholder = `Delete
-               Me
-               And
-               Code
-               Here
-`;
+function createDelayedPromise(value, delay) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(value);
+      }, delay);
+    });
+  }
+
+  async function handleMultiplePromises() {
+    const promises = [
+      createDelayedPromise("First", 3000),
+      createDelayedPromise("Second", 2000),
+      createDelayedPromise("Third", 1000),
+    ];
+
+    const results = await Promise.all(promises);
+    section1OutputDiv.textContent = `Results: ${results.join(", ")}`;
+  }
+
+  handleMultiplePromises();
